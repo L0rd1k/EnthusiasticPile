@@ -1,3 +1,5 @@
+#! /usr/bin/env python
+# -*- coding: utf-8 -*-
 # LIST (СПИСОК)
 # Изменяем - mutable
 # Содержит дублирующие элементы
@@ -17,7 +19,6 @@ newlist = powNumbers.copy()
 tuples_data = (1,2,563,2,3,1,34,6,2)
 print(tuples_data)
 print(tuples_data.count(2))
-
 
 
 print("Hello!")

@@ -19,7 +19,10 @@ def sitesDataToTranscript(url):
     soup = BeautifulSoup(page, "lxml")
     r_title = getArticleTitle(soup)
     r_text = getArticleText(soup)
-    return r_title, r_text
+    dictionary = dict()
+    for i, c in enumerate(r_title):
+        dictionary.update({r_title[i]:r_text[i]})
+    return dictionary
 
 
 
@@ -27,8 +30,10 @@ urls = ['https://learnenglish.britishcouncil.org/general-english/stories/a-serio
         'https://learnenglish.britishcouncil.org/general-english/video-zone/black-british-history',
         'https://learnenglish.britishcouncil.org/general-english/video-zone/ten-cat-facts'
         ]
-
+articles = dict()
 articles = [sitesDataToTranscript(u) for u in urls]
+
+res = [ele for key in articles for ele in key]
 
 try:
     os.mkdir("transcripts")
@@ -37,11 +42,17 @@ except OSError:
 else:
     print("Successfully created the directory!")
 
-for i, c in enumerate(articles):
-    with open("transcripts/article_" + str(c[0]) + ".txt","w+") as file:
-        file.writelines(articles[0][i])
+for key in articles:
+    for ele in key:
+        with open("transcripts/article_" + str(ele) + ".txt","w+") as file:
+            file.writelines(key.get(ele))
 
-        #pickle.dump(articles[i][1], file)
+
+
+# for i, c in enumerate(articles):
+#     with open("transcripts/article_" + str(articles[0].keys()) + ".txt","w+") as file:
+#         file.writelines(articles[0].get)
+#         pickle.dump(articles[i][1], file)
 
 #
 # data = {}
