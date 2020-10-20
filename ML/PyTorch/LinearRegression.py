@@ -2,7 +2,6 @@ import numpy as np
 import torch
 from torch import nn
 import matplotlib.pyplot as plt
-from torch.autograd import Variable
 
 x_train = np.array([[3.3], [4.4], [5.5], [6.71], [6.93], [4.168],
                     [9.779], [6.182], [7.59], [2.167], [7.042],
@@ -57,8 +56,7 @@ predict = predict.data.numpy()
 fig = plt.figure(figsize=(10, 5))
 plt.plot(tensor_x_train.numpy(), tensor_y_train.numpy(), 'ro', label='Original data')
 plt.plot(tensor_x_train.numpy(), predict, label='Fitting Line')
-# 显示图例
-plt.legend() 
+plt.legend()
 plt.show()
 
 # 保存模型

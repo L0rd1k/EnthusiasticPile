@@ -20,6 +20,7 @@ def sitesDataToTranscript(url):
     r_title = getArticleTitle(soup)
     r_text = getArticleText(soup)
     dictionary = dict()
+    print(r_text[0])
     for i, c in enumerate(r_title):
         dictionary.update({r_title[i]:r_text[i]})
     return dictionary
