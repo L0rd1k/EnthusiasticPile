@@ -46,5 +46,6 @@ def main(argv):
             load_images_from_folder(path)
             [parseXML(elem) for elem in xmlFilesName]
 
+
 if __name__ == "__main__":
     main(sys.argv[1:])
