@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 import numpy as np
 import torch
 from torch import nn
@@ -36,7 +38,6 @@ num_epochs = 10000
 for epoch in range(num_epochs):
     inputs = tensor_x_train
     target = tensor_y_train
-
     # forward
     out = model(inputs)
     loss = criterion(out, target)
@@ -44,9 +45,8 @@ for epoch in range(num_epochs):
     optimizer.zero_grad()
     loss.backward()
     optimizer.step()
-
     if (epoch+1) % 20 == 0:
-        print(f'Epoch[{epoch+1}/{num_epochs}], loss: {loss.item():.6f}')
+        print('Epoch[{epoch+1}/{num_epochs}], loss: {loss.item():.6f}')
 
 model.eval()
 with torch.no_grad():

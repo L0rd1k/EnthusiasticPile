@@ -56,7 +56,6 @@ class SiteScrapper:
                 with open("transcripts/article_" + str(ele) + ".txt", "w+") as file:
                     file.writelines(key.get(ele))
 
-
     def m_load_article_from_txt_file(self):
         data = {}
         for key in self.articles:
@@ -124,13 +123,13 @@ def main():
     data = data.transpose()
     #print(data.head())
 
-    # Find the top 30 words said by each comedian
+    # Find the top 30 words in each article
     top_article_words = {}
     for c in data.columns:
         top = data[c].sort_values(ascending=False).head(30)
         top_article_words[c] = list(zip(top.index, top.values))
 
-    # Print the top 15 words said by each comedian
+    # Print the top 15 words in each article
     for article, top_words in top_article_words.items():
         print(article)
         print(', '.join([word for word, count in top_words[0:14]]))
