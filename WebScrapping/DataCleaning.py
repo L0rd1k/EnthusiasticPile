@@ -2,19 +2,26 @@ import requests
 from bs4 import BeautifulSoup
 import os
 import pandas as pd
-import re
-import string
 from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.feature_extraction import text
+from collections import Counter
+from utils import UtilsFunction
+import pickle
+from wordcloud import WordCloud
+import matplotlib.pyplot as plt
+from wordcloud import WordCloud
 
 
-urls = ['https://learnenglish.britishcouncil.org/general-english/stories/a-serious-case',
-        'https://learnenglish.britishcouncil.org/general-english/video-zone/black-british-history',
-        'https://learnenglish.britishcouncil.org/general-english/video-zone/ten-cat-facts'
-        ]
+def readTxtFile(fileToParse):
+    file = open(fileToParse , "r")
+    gen_list = file.read().splitlines()
+    print(gen_list)
+    file.close()
+    return gen_list
 
-def initializer():
+def createDirectory(name):
     try:
-        os.mkdir("transcripts")
+        os.mkdir(name)
     except OSError:
         pass
     else:
@@ -31,7 +38,7 @@ class SiteScrapper:
         self.urls = urls
 
     def m_get_article_title(self, soup):
-        article_title = [p.text for p in soup.find(class_="title").find_all('h1')]
+        article_title = [p.text for p in soup.find(class_="column").find_all('h1')]
         return article_title
 
     def m_get_article_text(self,soup):
@@ -65,29 +72,9 @@ class SiteScrapper:
         return data
 
 
-class UtilsFunction():
-    def __init__(self):
-        pass
-
-    def clean_text_round(self, text):
-        text = text.lower()
-        text = re.sub('\[.*?\]', '', text)
-        text = re.sub('[%s]' % re.escape(string.punctuation), '', text)
-        text = re.sub('\w*\d\w*', '', text)
-        return text
-
-    def clean_text_round_second(self, text):
-        text = re.sub('[‘’“”…]', '', text)
-        text = re.sub('\n', '', text)
-        return text
-
-    def textCombination(self, list_of_text):
-        combined_text = ''.join(list_of_text)
-        return combined_text
-
-
 def main():
-    initializer()
+    createDirectory("transcripts")
+    urls = readTxtFile("Articles.txt")
     scrapper = SiteScrapper(urls)
     scrapper.m_get_article_pages_info()
     scrapper.m_save_articles_to_txt_file()
@@ -132,9 +119,46 @@ def main():
     # Print the top 15 words in each article
     for article, top_words in top_article_words.items():
         print(article)
-        print(', '.join([word for word, count in top_words[0:14]]))
-        print('---')
+        # print(', '.join([word for word, count in top_words[0:14]]))
+        # print('---')
 
+    words = []
+    for art in data.columns:
+        top = [word for (word, count) in top_article_words[art]]
+        for t in top:
+            words.append(t)
+    print("=====================================")
+
+    add_stop_words = [word for word, count in Counter(words).most_common() if count > 6]
+    # print(add_stop_words)
+
+    data_clean = pd.read_pickle('data_clean.pkl')
+    stop_words = text.ENGLISH_STOP_WORDS.union(add_stop_words)
+    cv = CountVectorizer(stop_words=stop_words)
+
+
+    data_cv = cv.fit_transform(data_clean.story)
+    data_stop = pd.DataFrame(data_cv.toarray(), columns=cv.get_feature_names())
+    data_stop.index = data_clean.index
+    pickle.dump(cv, open("cv_stop.pkl", "wb"))
+    data_stop.to_pickle("dtm_stop.pkl")
+    wc = WordCloud(stopwords=stop_words, background_color="white", colormap="Dark2",
+                   max_font_size=150, random_state=42)
+
+
+    plt.rcParams['figure.figsize'] = [16, 6]
+
+
+    # Create subplots for each comedian
+    for index, comedian in enumerate(data.columns):
+        wc.generate(data_clean.story[comedian])
+
+        plt.subplot(3, 4, index + 1)
+        plt.imshow(wc, interpolation="bilinear")
+        plt.axis("off")
+        # plt.title(full_names[index])
+
+    plt.show()
 
 
 if __name__ == "__main__":
