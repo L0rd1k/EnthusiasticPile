@@ -8,4 +8,3 @@ class CategorySerializer(serializers.ModelSerializer):
             'name',
             'description',
             'url')  #'__all__'
-
