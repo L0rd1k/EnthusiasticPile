@@ -3,6 +3,5 @@ from . import views
 
 urlpatterns = [
     path('category/', views.CategoryListView.as_view(), name="api-overview"),
-    path('category/<int:pk>', views.CategoryListView.as_view(), name="api-put"),
-
+    path('category/<int:pk>', views.CategoryDetailView.as_view())
 ]

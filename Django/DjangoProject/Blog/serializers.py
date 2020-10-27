@@ -5,6 +5,13 @@ class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
         fields = (
+            'id',
             'name',
             'description',
-            'url')  #'__all__'
+            'url')
+
+
+class CategoryDetailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Category
+        fields = '__all__'
