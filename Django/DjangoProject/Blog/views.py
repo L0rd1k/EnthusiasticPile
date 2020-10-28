@@ -1,9 +1,16 @@
 from rest_framework.response import Response
-from rest_framework.views import APIView
-from rest_framework.generics import get_object_or_404
+from rest_framework.views import APIView # 1 method
 
-from .models import Category
-from .serializers import CategorySerializer, CategoryDetailSerializer
+from rest_framework.generics import GenericAPIView  # 2 method
+from rest_framework.mixins import ListModelMixin, CreateModelMixin
+
+from rest_framework.generics import get_object_or_404
+from rest_framework.generics import CreateAPIView, ListAPIView, RetrieveAPIView, RetrieveUpdateAPIView, RetrieveUpdateDestroyAPIView
+
+
+from .models import Category, Genre, Actor
+from .serializers import CategorySerializer, GenreSerializer, ActorSerializer
+from .serializers import CategoryDetailSerializer
 
 class CategoryDetailView(APIView):
     def get(self, request, pk):
@@ -40,3 +47,25 @@ class CategoryListView(APIView):
         if serializer.is_valid(raise_exception=True):
             category_saved = serializer.save()
         return Response({"success":"Category '{}' created successfully".format(category_saved.name)})
+
+
+#class GenreListView(ListModelMixin, CreateModelMixin, GenericAPIView):
+class GenreListView(CreateAPIView, ListAPIView):
+    queryset = Genre.objects.all() #  # (запрос к базе) который используется для получение объектов.
+    serializer_class = GenreSerializer # класс сериализатора, который используется для проверки и десериализации объектов из базы
+
+    # get_queryset - запрос с фильтрацией
+
+    def perform_create(self, serializer):
+        # genre = get_object_or_404(Genre, name=self.request.data.get('name'))
+        return serializer.save()
+
+    # def get(self, request, *args, **kwargs):
+    #     return self.list(request, *args, **kwargs)
+
+    # def post(self, request, *args, **kwargs):
+    #     return self.create(request, *args, **kwargs)
+
+class GenreDetailView(RetrieveUpdateDestroyAPIView):
+    queryset = Genre.objects.all()
+    serializer_class = GenreSerializer
