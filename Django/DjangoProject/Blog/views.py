@@ -1,17 +1,20 @@
 from rest_framework.response import Response
-from rest_framework.views import APIView # 1 method
+from rest_framework.generics import get_object_or_404
+#1 method
+from rest_framework.views import APIView
 
+# 2 method
 from rest_framework.generics import GenericAPIView  # 2 method
 from rest_framework.mixins import ListModelMixin, CreateModelMixin
-
-from rest_framework.generics import get_object_or_404
 from rest_framework.generics import CreateAPIView, ListAPIView, RetrieveAPIView, RetrieveUpdateAPIView, RetrieveUpdateDestroyAPIView
 
+#3 method
+from rest_framework import viewsets
 
 from .models import Category, Genre, Actor
 from .serializers import CategorySerializer, GenreSerializer, ActorSerializer
 from .serializers import CategoryDetailSerializer
-
+#======================================================
 class CategoryDetailView(APIView):
     def get(self, request, pk):
         category = Category.objects.get(id=pk)
@@ -53,19 +56,32 @@ class CategoryListView(APIView):
 class GenreListView(CreateAPIView, ListAPIView):
     queryset = Genre.objects.all() #  # (запрос к базе) который используется для получение объектов.
     serializer_class = GenreSerializer # класс сериализатора, который используется для проверки и десериализации объектов из базы
-
     # get_queryset - запрос с фильтрацией
-
     def perform_create(self, serializer):
         # genre = get_object_or_404(Genre, name=self.request.data.get('name'))
         return serializer.save()
-
     # def get(self, request, *args, **kwargs):
     #     return self.list(request, *args, **kwargs)
-
     # def post(self, request, *args, **kwargs):
     #     return self.create(request, *args, **kwargs)
 
 class GenreDetailView(RetrieveUpdateDestroyAPIView):
     queryset = Genre.objects.all()
     serializer_class = GenreSerializer
+
+
+class ActorViewSet(viewsets.ModelViewSet):
+    serializer_class = ActorSerializer
+    queryset = Actor.objects.all()
+
+
+# class ActorListView(viewsets.ViewSet):
+    # def list(self, request):
+    #     queryset = Actor.objects.all()
+    #     serializer = ActorSerializer(queryset, many=True)
+    #     return Response(serializer.data)
+    # def retrieve(self, request, pk=None):
+    #     queryset = Actor.objects.all()
+    #     actor = get_object_or_404(queryset,pk=pk)
+    #     serializer = ActorSerializer(actor)
+    #     return Response(serializer.data)
