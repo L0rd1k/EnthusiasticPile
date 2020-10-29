@@ -16,5 +16,11 @@ urlpatterns = [
     path('genre/', views.GenreListView.as_view()),
     path('genre/<int:pk>', views.GenreDetailView.as_view()),
 
+
+    path('movie-shot/', views.MovieShotListView),
+    #path('movie-shot/<int:pk>', views.MoviewShotListView),
+
+
+
     path('', include(router.urls))
 ]

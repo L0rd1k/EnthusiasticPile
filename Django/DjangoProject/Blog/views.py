@@ -1,5 +1,9 @@
 from rest_framework.response import Response
 from rest_framework.generics import get_object_or_404
+#wrapping API views with decorator
+from rest_framework.decorators import api_view
+from rest_framework import status
+
 #1 method
 from rest_framework.views import APIView
 
@@ -11,9 +15,24 @@ from rest_framework.generics import CreateAPIView, ListAPIView, RetrieveAPIView,
 #3 method
 from rest_framework import viewsets
 
-from .models import Category, Genre, Actor
-from .serializers import CategorySerializer, GenreSerializer, ActorSerializer
+from .models import Category, Genre, Actor, MovieShots
+from .serializers import CategorySerializer, GenreSerializer, ActorSerializer, MovieShotsSerializer
 from .serializers import CategoryDetailSerializer
+#======================================================
+
+@api_view(['GET', 'POST'])
+def MovieShotListView(request):
+    if request.method == 'GET':
+        movieshot = MovieShots.objects.all()    
+        serializer = MovieShotsSerializer(movieshot, many=True)
+        return Response(serializer.data)
+    elif request.method == 'POST':
+        serializer = MovieShotsSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 #======================================================
 class CategoryDetailView(APIView):
     def get(self, request, pk):
@@ -51,7 +70,7 @@ class CategoryListView(APIView):
             category_saved = serializer.save()
         return Response({"success":"Category '{}' created successfully".format(category_saved.name)})
 
-
+#======================================================
 #class GenreListView(ListModelMixin, CreateModelMixin, GenericAPIView):
 class GenreListView(CreateAPIView, ListAPIView):
     queryset = Genre.objects.all() #  # (запрос к базе) который используется для получение объектов.
@@ -69,7 +88,7 @@ class GenreDetailView(RetrieveUpdateDestroyAPIView):
     queryset = Genre.objects.all()
     serializer_class = GenreSerializer
 
-
+#======================================================
 class ActorViewSet(viewsets.ModelViewSet):
     serializer_class = ActorSerializer
     queryset = Actor.objects.all()

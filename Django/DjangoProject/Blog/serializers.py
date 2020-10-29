@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Category, Genre, Actor
+from .models import Category, Genre, Actor, MovieShots
 
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
@@ -16,6 +16,8 @@ class CategoryDetailSerializer(serializers.ModelSerializer):
         model = Category
         fields = '__all__'
 
+
+
 #сождержит в себе методы update и create
 class GenreSerializer(serializers.ModelSerializer):
     class Meta:
@@ -29,4 +31,10 @@ class GenreSerializer(serializers.ModelSerializer):
 class ActorSerializer(serializers.ModelSerializer):
     class Meta:
         model = Actor
+        fields = '__all__'
+
+
+class MovieShotsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = MovieShots
         fields = '__all__'
