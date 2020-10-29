@@ -18,7 +18,7 @@ urlpatterns = [
 
 
     path('movie-shot/', views.MovieShotListView),
-    #path('movie-shot/<int:pk>', views.MoviewShotListView),
+    path('movie-shot/<int:pk>', views.MovieShotDetailListView),
 
 
 
