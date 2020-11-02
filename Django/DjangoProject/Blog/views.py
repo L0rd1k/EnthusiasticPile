@@ -1,5 +1,9 @@
 from rest_framework.response import Response
 from rest_framework.generics import get_object_or_404
+from .models import Category, Genre, Actor, MovieShots, Movie
+from .serializers import CategorySerializer, GenreSerializer, ActorSerializer, MovieShotsSerializer, MovieListSerializer, ReviewCreateSerializer
+from .serializers import CategoryDetailSerializer, MovieDetailSerializer
+
 #wrapping API views with decorator
 from rest_framework.decorators import api_view
 from rest_framework import status
@@ -14,12 +18,15 @@ from rest_framework.generics import CreateAPIView, ListAPIView, RetrieveAPIView,
 
 #3 method
 from rest_framework import viewsets
+#======AUTH==========================================
+from rest_framework.permissions import AllowAny
+from .models import User
+from .serializers import LoginSerializer
+from .serializers import RegistrationSerializer
 
-from .models import Category, Genre, Actor, MovieShots
-from .serializers import CategorySerializer, GenreSerializer, ActorSerializer, MovieShotsSerializer
-from .serializers import CategoryDetailSerializer
-#======================================================
+#======================================================================================
 
+#======================================================================================
 @api_view(['GET', 'POST'])
 def MovieShotListView(request):
     if request.method == 'GET':
@@ -54,7 +61,9 @@ def MovieShotDetailListView(request, pk):
         return Response(status=status.HTTP_204_NO_CONTENT)
         
 
-#======================================================
+#======================================================================================
+
+#======================================================================================
 class CategoryDetailView(APIView):
     def get(self, request, pk):
         category = Category.objects.get(id=pk)
@@ -91,7 +100,9 @@ class CategoryListView(APIView):
             category_saved = serializer.save()
         return Response({"success":"Category '{}' created successfully".format(category_saved.name)})
 
-#======================================================
+#======================================================================================
+
+#======================================================================================
 #class GenreListView(ListModelMixin, CreateModelMixin, GenericAPIView):
 class GenreListView(CreateAPIView, ListAPIView):
     queryset = Genre.objects.all() #  # (запрос к базе) который используется для получение объектов.
@@ -109,7 +120,9 @@ class GenreDetailView(RetrieveUpdateDestroyAPIView):
     queryset = Genre.objects.all()
     serializer_class = GenreSerializer
 
-#======================================================
+#======================================================================================
+
+#======================================================================================
 class ActorViewSet(viewsets.ModelViewSet):
     serializer_class = ActorSerializer
     queryset = Actor.objects.all()
@@ -125,3 +138,58 @@ class ActorViewSet(viewsets.ModelViewSet):
     #     actor = get_object_or_404(queryset,pk=pk)
     #     serializer = ActorSerializer(actor)
     #     return Response(serializer.data)
+#======================================================================================
+
+#======================================================================================
+
+class MovieListView(APIView):
+    def get(self, request):
+        movies =  Movie.objects.filter(draft=False)
+        serializer = MovieListSerializer(movies, many=True)
+        return Response(serializer.data)
+
+
+
+class MovieDetailView(APIView):
+    def get(self, request, pk):
+        movie =  Movie.objects.get(id=pk, draft=False)
+        serializer = MovieDetailSerializer(movie)
+        return Response(serializer.data)
+
+#======================================================================================
+
+#======================================================================================
+
+class ReviewCreateView(APIView):
+    def post(self, request):
+        review = ReviewCreateSerializer(data=request.data)
+        if review.is_valid():
+            review.save()
+        return Response(status=201)
+
+
+#======================================================================================
+
+#======================================================================================
+class RegistrationAPIView(APIView):
+    permission_classes = [AllowAny]
+    serializer_class = RegistrationSerializer
+    def post(self, request):
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(
+            {
+                'token': serializer.data.get('token', None),
+            },
+            status=status.HTTP_201_CREATED,
+        )
+
+class LoginAPIView(APIView):
+    permission_classes = [AllowAny]
+    serializer_class = LoginSerializer
+
+    def post(self, request):
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
