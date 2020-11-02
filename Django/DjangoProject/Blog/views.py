@@ -1,32 +1,71 @@
 from rest_framework.response import Response
-from rest_framework.generics import get_object_or_404
-from .models import Category, Genre, Actor, MovieShots, Movie
-from .serializers import CategorySerializer, GenreSerializer, ActorSerializer, MovieShotsSerializer, MovieListSerializer, ReviewCreateSerializer
-from .serializers import CategoryDetailSerializer, MovieDetailSerializer
 
-#wrapping API views with decorator
-from rest_framework.decorators import api_view
 from rest_framework import status
+from rest_framework.generics import get_object_or_404
 
-#1 method
+# Import our models (DB - tables)
+from .models import Category 
+from .models import Genre
+from .models import Actor
+from .models import MovieShots 
+from .models import Movie
+
+# Our serializers
+from .serializers import CategorySerializer, CategoryDetailSerializer
+from .serializers import GenreSerializer
+from .serializers import ActorSerializer
+from .serializers import MovieShotsSerializer
+from .serializers import MovieListSerializer, MovieDetailSerializer
+from .serializers import ReviewCreateSerializer
+
+
+############# 1 method - Function Based Views #############
+# Wrapping API views with DECORATORS
+from rest_framework.decorators import api_view 
+# "API policy decorators" - override the default settings
+from rest_framework.decorators import throttle_classes
+# "View schema decorator" - override the default schema generation for function based views
+from rest_framework.decorators import schema 
+###########################################################
+
+############## 2 method - Class-based Views ###############
 from rest_framework.views import APIView
+###########################################################
 
-# 2 method
-from rest_framework.generics import GenericAPIView  # 2 method
-from rest_framework.mixins import ListModelMixin, CreateModelMixin
-from rest_framework.generics import CreateAPIView, ListAPIView, RetrieveAPIView, RetrieveUpdateAPIView, RetrieveUpdateDestroyAPIView
+############## 3 method - Generic views ##################
+from rest_framework.generics import GenericAPIView
+from rest_framework.generics import CreateAPIView 
+from rest_framework.generics import ListAPIView
+from rest_framework.generics import ListCreateAPIView
+from rest_framework.generics import RetrieveAPIView 
+from rest_framework.generics import RetrieveUpdateAPIView 
+from rest_framework.generics import RetrieveUpdateDestroyAPIView
 
-#3 method
+from rest_framework.mixins import ListModelMixin
+from rest_framework.mixins import CreateModelMixin
+###########################################################
+
+
+
+# 4 method
 from rest_framework import viewsets
-#======AUTH==========================================
-from rest_framework.permissions import AllowAny
-from .models import User
-from .serializers import LoginSerializer
-from .serializers import RegistrationSerializer
+
+
+
+#===============================AUTH==========================================
+# from rest_framework.permissions import AllowAny
+# from .models import User
+# from .serializers import LoginSerializer
+# from .serializers import RegistrationSerializer
+
+
+
 
 #======================================================================================
-
+# 1.Set of simple decorators that wrap your function based views to ensure they receive an instance of 'Request' and allows them to return a 'Response', and allow you to configure how the request is processed.
+# 2.api_view decorator takes a list of HTTP methods that your view should respond to.
 #======================================================================================
+
 @api_view(['GET', 'POST'])
 def MovieShotListView(request):
     if request.method == 'GET':
@@ -59,11 +98,13 @@ def MovieShotDetailListView(request, pk):
     elif request.method == 'DELETE':
         movieShot.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
-        
 
 #======================================================================================
-
+# 1. 'APIView' class subclasses Django's 'View' class.
+# 2. Requests passed to the handler methods will be 'Request' instance / not Django's HttpRequest instance
+# 3. Handler methods may return REST framework's 'Response', instead of Django's 'HttpResponse'. 
 #======================================================================================
+
 class CategoryDetailView(APIView):
     def get(self, request, pk):
         category = Category.objects.get(id=pk)
@@ -171,25 +212,25 @@ class ReviewCreateView(APIView):
 #======================================================================================
 
 #======================================================================================
-class RegistrationAPIView(APIView):
-    permission_classes = [AllowAny]
-    serializer_class = RegistrationSerializer
-    def post(self, request):
-        serializer = self.serializer_class(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(
-            {
-                'token': serializer.data.get('token', None),
-            },
-            status=status.HTTP_201_CREATED,
-        )
+# class RegistrationAPIView(APIView):
+#     permission_classes = [AllowAny]
+#     serializer_class = RegistrationSerializer
+#     def post(self, request):
+#         serializer = self.serializer_class(data=request.data)
+#         serializer.is_valid(raise_exception=True)
+#         serializer.save()
+#         return Response(
+#             {
+#                 'token': serializer.data.get('token', None),
+#             },
+#             status=status.HTTP_201_CREATED,
+#         )
 
-class LoginAPIView(APIView):
-    permission_classes = [AllowAny]
-    serializer_class = LoginSerializer
+# class LoginAPIView(APIView):
+#     permission_classes = [AllowAny]
+#     serializer_class = LoginSerializer
 
-    def post(self, request):
-        serializer = self.serializer_class(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+#     def post(self, request):
+#         serializer = self.serializer_class(data=request.data)
+#         serializer.is_valid(raise_exception=True)
+#         return Response(serializer.data, status=status.HTTP_200_OK)

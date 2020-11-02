@@ -6,8 +6,8 @@ from .views import ActorViewSet #ActorListView
 
 
 
-from .views import RegistrationAPIView
-from .views import LoginAPIView
+# from .views import RegistrationAPIView
+# from .views import LoginAPIView
 
 
 router = DefaultRouter()
@@ -32,10 +32,8 @@ urlpatterns = [
     path("review/", views.ReviewCreateView.as_view()),
 
 
-    path("registration/", RegistrationAPIView.as_view(), name='user_registration'),
-    path("login/", LoginAPIView.as_view(), name='user_registration'),
-
-
+    # path("registration/", RegistrationAPIView.as_view(), name='user_registration'),
+    # path("login/", LoginAPIView.as_view(), name='user_registration'),
 
     path('', include(router.urls))
 ]

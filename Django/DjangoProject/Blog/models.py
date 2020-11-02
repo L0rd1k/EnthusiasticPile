@@ -7,9 +7,9 @@ from django.urls import reverse
 from django.core import validators
 from django.conf import settings
 
-from django.contrib.auth.models import AbstractBaseUser
-from django.contrib.auth.models import PermissionsMixin
-from django.contrib.auth.models import BaseUserManager
+# from django.contrib.auth.models import AbstractBaseUser
+# from django.contrib.auth.models import PermissionsMixin
+# from django.contrib.auth.models import BaseUserManager
 
 class Category(models.Model):
     name = models.CharField("Категория", max_length=150)
@@ -139,73 +139,73 @@ class Review(models.Model):
         verbose_name = "Отзыв"
         verbose_name_plural = "Отзывы"
 
-class UserManager(BaseUserManager):
-    # Django требует, чтобы пользовательские User определяли свой собственный класс Manager.
-    # Унаследовав от BaseUserManager, мы получаем много кода, используемого Django для создания User.
+# class UserManager(BaseUserManager):
+#     # Django требует, чтобы пользовательские User определяли свой собственный класс Manager.
+#     # Унаследовав от BaseUserManager, мы получаем много кода, используемого Django для создания User.
 
-    # Все, что нам нужно сделать, это переопределить функцию create_user, которую мы будем использовать для создания объектов User.
-    def _create_user(self, username, email, password=None, **extra_fields):
-        if not username:
-            raise ValueError('Укзанное имя пользователя должно быть установлено')
-        if not email:
-            raise ValueError('Данный адрес электоронной почты должен быть установлен')
-        email = self.normalize_email(email)
-        user = self.model(username=username, email=email, **extra_fields)
-        user.set_password(password)
-        user.save(using=self._db)
+#     # Все, что нам нужно сделать, это переопределить функцию create_user, которую мы будем использовать для создания объектов User.
+#     def _create_user(self, username, email, password=None, **extra_fields):
+#         if not username:
+#             raise ValueError('Укзанное имя пользователя должно быть установлено')
+#         if not email:
+#             raise ValueError('Данный адрес электоронной почты должен быть установлен')
+#         email = self.normalize_email(email)
+#         user = self.model(username=username, email=email, **extra_fields)
+#         user.set_password(password)
+#         user.save(using=self._db)
 
-        return user
+#         return user
     
-    # Создает и возвращает 'User' с адресом электронной почты, именем пользователя и паролем.
-    def create_user(self, username, email, password=None, **extra_fields):
-        extra_fields.setdefault('is_stuff', False)
-        extra_fields.setdefault('is_superuser', False)
-        return self._create_user(username, email, password, **extra_fields)
+#     # Создает и возвращает 'User' с адресом электронной почты, именем пользователя и паролем.
+#     def create_user(self, username, email, password=None, **extra_fields):
+#         extra_fields.setdefault('is_stuff', False)
+#         extra_fields.setdefault('is_superuser', False)
+#         return self._create_user(username, email, password, **extra_fields)
 
-    # Создает и возвращает пользователя с правами суперпользователя (администратора).
-    def create_superuser(self, username, email, password, **extra_fields):
-        extra_fields.setdefault('is_stuff', True)
-        extra_fields.setdefault('is_superuser', True)
-        if extra_fields.get('is_staff') is not True:
-            raise ValueError('Суперпользователь должен иметь is_staff=True.')
-        if extra_fields.get('is_superuser') is not True:
-            raise ValueError('Суперпользователь должен иметь is_superuser=True.')
-        return self._create_user(username, email, password, **extra_fields)
+#     # Создает и возвращает пользователя с правами суперпользователя (администратора).
+#     def create_superuser(self, username, email, password, **extra_fields):
+#         extra_fields.setdefault('is_stuff', True)
+#         extra_fields.setdefault('is_superuser', True)
+#         if extra_fields.get('is_staff') is not True:
+#             raise ValueError('Суперпользователь должен иметь is_staff=True.')
+#         if extra_fields.get('is_superuser') is not True:
+#             raise ValueError('Суперпользователь должен иметь is_superuser=True.')
+#         return self._create_user(username, email, password, **extra_fields)
 
 
 
-class User(AbstractBaseUser, PermissionsMixin):
-    username = models.CharField(db_index = True, max_length=255, unique=True)
-    email = models.EmailField(validators=[validators.validate_email], unique=True,blank=False)
-    is_stuff = models.BooleanField(default=False)
-    is_active = models.BooleanField(default=True)
+# class User(AbstractBaseUser, PermissionsMixin):
+#     username = models.CharField(db_index = True, max_length=255, unique=True)
+#     email = models.EmailField(validators=[validators.validate_email], unique=True,blank=False)
+#     is_stuff = models.BooleanField(default=False)
+#     is_active = models.BooleanField(default=True)
 
-    USERNAME_FIELD = 'email' # свойство использует поле email для входа
-    REQUIRED_FIELDS = ('username',)
+#     USERNAME_FIELD = 'email' # свойство использует поле email для входа
+#     REQUIRED_FIELDS = ('username',)
 
-    objects = UserManager() # класс UserManager, должен управлять объектами этого типа.
+#     objects = UserManager() # класс UserManager, должен управлять объектами этого типа.
 
-    def __str__(self):
-        return self.username # возвращает строковое прдставление класса 'User'
+#     def __str__(self):
+#         return self.username # возвращает строковое прдставление класса 'User'
 
-    @property
-    def token(self): 
-        #Позволяет нам получить токен пользователя, вызвав user.token вместо user.generate_jwt_token().
-        #Декоратор `@property` выше делает это возможным 'token' называется «динамическим свойством ».
-        return self._generate_jwt_token()
+#     @property
+#     def token(self): 
+#         #Позволяет нам получить токен пользователя, вызвав user.token вместо user.generate_jwt_token().
+#         #Декоратор `@property` выше делает это возможным 'token' называется «динамическим свойством ».
+#         return self._generate_jwt_token()
 
-    def _generate_jwt_token(self):
-        # Создает веб-токен JSON, в котором хранится идентификатор этого пользователя и срок его действия составляет 60 дней в будущем.
-        dt = datetime.now() + timedelta(days=60)
-        token = jwt.encode({
-            'id': self.pk,
-            'exp': int(dt.strftime('%s'))
-            }, settings.SECRET_KEY, algorithm='HS256')
-        return token.decode('utf-8')
+#     def _generate_jwt_token(self):
+#         # Создает веб-токен JSON, в котором хранится идентификатор этого пользователя и срок его действия составляет 60 дней в будущем.
+#         dt = datetime.now() + timedelta(days=60)
+#         token = jwt.encode({
+#             'id': self.pk,
+#             'exp': int(dt.strftime('%s'))
+#             }, settings.SECRET_KEY, algorithm='HS256')
+#         return token.decode('utf-8')
     
-    def get_full_name(self):
-        return self.username
+#     def get_full_name(self):
+#         return self.username
     
-    def get_short_name(self):
-        return self.username
+#     def get_short_name(self):
+#         return self.username
 
