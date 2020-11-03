@@ -34,6 +34,13 @@ from rest_framework.views import APIView
 
 ############## 3 method - Generic views ##################
 from rest_framework.generics import GenericAPIView
+# Methods:
+# 1. queryset            |  get_queryset(self)
+# 2. lookup_field        |  get_object(self)
+# 3. queryset            |  filter_queryset(self, queryset)
+# 4. serializer_class    |  get_serializer_class(self)
+
+############## Concrete View Classes ##################
 from rest_framework.generics import CreateAPIView 
 from rest_framework.generics import ListAPIView
 from rest_framework.generics import ListCreateAPIView
@@ -41,15 +48,25 @@ from rest_framework.generics import RetrieveAPIView
 from rest_framework.generics import RetrieveUpdateAPIView 
 from rest_framework.generics import RetrieveUpdateDestroyAPIView
 
-from rest_framework.mixins import ListModelMixin
-from rest_framework.mixins import CreateModelMixin
+############## Mixins ##################
+# Methods .get() / .post()
+from rest_framework.mixins import ListModelMixin        # .list(request, *args, **kwargs)
+from rest_framework.mixins import CreateModelMixin      # .create(request, *args, **kwargs)
+from rest_framework.mixins import RetrieveModelMixin    # .retrieve(request, *args, **kwargs)
+from rest_framework.mixins import UpdateModelMixin      # .update(request, *args, **kwargs) / .partial_update(request, *args, **kwargs)
+from rest_framework.mixins import DestroyModelMixin     # .destroy(request, *args, **kwargs)
+
+# perform_create(self, serializer) - Called by CreateModelMixin when saving a new object instance.
+# perform_update(self, serializer) - Called by UpdateModelMixin when saving an existing object instance.
+# perform_destroy(self, instance) - Called by DestroyModelMixin when deleting an object instance.
+
+
 ###########################################################
 
 
-
-# 4 method
+############## 4 method - ViewSets ##################
 from rest_framework import viewsets
-
+# A ViewSet class is simply a type of class-based View, that does not provide any method handlers such as .get() or .post(), and instead provides actions such as .list() and .create()
 
 
 #===============================AUTH==========================================
