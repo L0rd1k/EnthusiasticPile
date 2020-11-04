@@ -34,12 +34,11 @@ from rest_framework.views import APIView
 
 ############## 3 method - Generic views ##################
 from rest_framework.generics import GenericAPIView
-# Methods:
+# ~~~ Methods ~~~ :
 # 1. queryset            |  get_queryset(self)
 # 2. lookup_field        |  get_object(self)
 # 3. queryset            |  filter_queryset(self, queryset)
 # 4. serializer_class    |  get_serializer_class(self)
-
 ############## Concrete View Classes ##################
 from rest_framework.generics import CreateAPIView 
 from rest_framework.generics import ListAPIView
@@ -49,7 +48,7 @@ from rest_framework.generics import RetrieveUpdateAPIView
 from rest_framework.generics import RetrieveUpdateDestroyAPIView
 
 ############## Mixins ##################
-# Methods .get() / .post()
+# ~~~ Methods ~~~ : .get() / .post()
 from rest_framework.mixins import ListModelMixin        # .list(request, *args, **kwargs)
 from rest_framework.mixins import CreateModelMixin      # .create(request, *args, **kwargs)
 from rest_framework.mixins import RetrieveModelMixin    # .retrieve(request, *args, **kwargs)
@@ -59,14 +58,37 @@ from rest_framework.mixins import DestroyModelMixin     # .destroy(request, *arg
 # perform_create(self, serializer) - Called by CreateModelMixin when saving a new object instance.
 # perform_update(self, serializer) - Called by UpdateModelMixin when saving an existing object instance.
 # perform_destroy(self, instance) - Called by DestroyModelMixin when deleting an object instance.
-
-
 ###########################################################
 
 
 ############## 4 method - ViewSets ##################
 from rest_framework import viewsets
 # A ViewSet class is simply a type of class-based View, that does not provide any method handlers such as .get() or .post(), and instead provides actions such as .list() and .create()
+# ~~~ Methods ~~~ :
+    # 1. list(self,request)
+    # 2. create(self, request)
+    # 3. retrieve(self, request, pk=None)
+    # 4. update(self, request, pk=None)
+    # 5. partial_update(self, request, pk=None)
+    # 6. destroy(self, request, pk=None)
+# ~~~ Atributes ~~~ 
+    # @action(detail=True, methods=['put'], name='Change Password')
+    # 1. basename - the base to use for the URL names that are created.
+    # 2. action - the name of the current action (e.g., list, create).
+    # 3. detail - boolean indicating if the current action is configured for a list or detail view.
+    # 4. suffix - the display suffix for the viewset type - mirrors the detail attribute.
+    # 5. name - the display name for the viewset. This argument is mutually exclusive to suffix.
+    # 6. description - the display description for the individual view of a viewset.
+# ~~~ API Reference ~~~
+    # 1. ViewSet                inherit APIView
+    # 2. GenericViewSet         inherit GenericAPIView
+    # 3. ModelViewSet           inherit GenericAPIView
+    # 4. ReadOnlyModelViewSet   inherit GenericAPIView
+###########################################################
+
+
+
+
 
 
 #===============================AUTH==========================================
