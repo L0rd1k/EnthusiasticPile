@@ -31,14 +31,18 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    # Django Apps
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # Local Apps (My project's apps)
+    'Blog.apps.BlogConfig',
+    # Third-Party Apps
     'rest_framework',
-    'Blog.apps.BlogConfig'
+    'rest_framework.authtoken' 
 ]
 
 MIDDLEWARE = [
@@ -125,9 +129,16 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 
-REST_FRAMEWORK = {
-    # 'DEFAULT_PERMISSION_CLASSES': ('rest_framework.permissions.IsAuthenticated', ),
+LOGIN_REDIRECT_URL = '/users/'
 
-    #JSON Web Token (JWT) - это интернет-стандарт для создания токенов доступа на основе JSON
-    # 'DEFAULT_AUTHENTICATION_CLASSES': ( 'Blog.backends.JWTAuthentication', )
+REST_FRAMEWORK = {
+    # cхема аутентификации поумолчанию
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        #'Blog.backends.JWTAuthentication', #JSON Web Token (JWT) - это интернет-стандарт для создания токенов доступа на основе JSON
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    )
 }

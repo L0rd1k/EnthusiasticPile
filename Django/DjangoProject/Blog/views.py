@@ -87,19 +87,6 @@ from rest_framework import viewsets
 ###########################################################
 
 
-
-
-
-
-#===============================AUTH==========================================
-# from rest_framework.permissions import AllowAny
-# from .models import User
-# from .serializers import LoginSerializer
-# from .serializers import RegistrationSerializer
-
-
-
-
 #======================================================================================
 # 1.Set of simple decorators that wrap your function based views to ensure they receive an instance of 'Request' and allows them to return a 'Response', and allow you to configure how the request is processed.
 # 2.api_view decorator takes a list of HTTP methods that your view should respond to.
@@ -164,7 +151,6 @@ class CategoryDetailView(APIView):
         return Response({
             "message": "Category `{}` has been deleted.".format(category.name)
         }, status=204)
-
 
 class CategoryListView(APIView):
     def get(self,request):
@@ -247,29 +233,3 @@ class ReviewCreateView(APIView):
             review.save()
         return Response(status=201)
 
-
-#======================================================================================
-
-#======================================================================================
-# class RegistrationAPIView(APIView):
-#     permission_classes = [AllowAny]
-#     serializer_class = RegistrationSerializer
-#     def post(self, request):
-#         serializer = self.serializer_class(data=request.data)
-#         serializer.is_valid(raise_exception=True)
-#         serializer.save()
-#         return Response(
-#             {
-#                 'token': serializer.data.get('token', None),
-#             },
-#             status=status.HTTP_201_CREATED,
-#         )
-
-# class LoginAPIView(APIView):
-#     permission_classes = [AllowAny]
-#     serializer_class = LoginSerializer
-
-#     def post(self, request):
-#         serializer = self.serializer_class(data=request.data)
-#         serializer.is_valid(raise_exception=True)
-#         return Response(serializer.data, status=status.HTTP_200_OK)

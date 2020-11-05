@@ -1,5 +1,7 @@
 from django.contrib.auth.models import User
+
 from rest_framework import serializers
+from rest_framework.authtoken.models import Token
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -19,5 +21,8 @@ class UserSerializer(serializers.ModelSerializer):
         )
         user.set_password(validated_data['password'])
         user.save()
+        Token.objects.create(user=user) # Убеждаемся, что токены создаются при создании пользователя
         return user
+
+
 
