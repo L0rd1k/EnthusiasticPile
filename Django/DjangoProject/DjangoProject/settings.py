@@ -38,8 +38,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
     # Local Apps (My project's apps)
     'Blog.apps.BlogConfig',
+
     # Third-Party Apps
     'rest_framework',
     'rest_framework.authtoken' 
@@ -139,6 +141,9 @@ REST_FRAMEWORK = {
         #'Blog.backends.JWTAuthentication', #JSON Web Token (JWT) - это интернет-стандарт для создания токенов доступа на основе JSON
     ),
     'DEFAULT_PERMISSION_CLASSES': (
-        'rest_framework.permissions.IsAuthenticated',
-    )
+	    # 'rest_framework.permissions.AllowAny', #any user, authenticated or not, has full access 
+        'rest_framework.permissions.IsAuthenticated', # only authenticated, registered users have access 
+        # 'rest_framework.permissions.IsAdminUser', # only admins/superusers have access 
+        # 'rest_framework.permissions.IsAuthenticatedOrReadOnly', # unauthorized users can view any page, but only authenticated users have write, edit, or delete privileges
+    ),
 }
