@@ -38,14 +38,24 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
+    'django.contrib.sites',
+    
     # Local Apps (My project's apps)
     'Blog.apps.BlogConfig',
 
     # Third-Party Apps
     'rest_framework',
-    'rest_framework.authtoken' 
+    'rest_framework.authtoken',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'rest_auth',
+    'rest_auth.registration',
 ]
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend' # output the emails to the console
+
+SITE_ID = 1
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -136,14 +146,15 @@ LOGIN_REDIRECT_URL = '/users/'
 REST_FRAMEWORK = {
     # cхема аутентификации поумолчанию
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework.authentication.TokenAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
-        #'Blog.backends.JWTAuthentication', #JSON Web Token (JWT) - это интернет-стандарт для создания токенов доступа на основе JSON
+        #'rest_framework.authentication.BasicAuthentication',     # pass the session ID in the HTTP headers for the API
+        'rest_framework.authentication.SessionAuthentication',   # power the Browsable API and ability to log in/log out   
+        'rest_framework.authentication.TokenAuthentication',     # power the Browsable API and ability to log in/log out
+        #'Blog.backends.JWTAuthentication',                      # JSON Web Token (JWT) - это интернет-стандарт для создания токенов доступа на основе JSON
     ),
     'DEFAULT_PERMISSION_CLASSES': (
-	    # 'rest_framework.permissions.AllowAny', #any user, authenticated or not, has full access 
-        'rest_framework.permissions.IsAuthenticated', # only authenticated, registered users have access 
-        # 'rest_framework.permissions.IsAdminUser', # only admins/superusers have access 
+	    # 'rest_framework.permissions.AllowAny',                  # any user, authenticated or not, has full access 
+        'rest_framework.permissions.IsAuthenticated',             # only authenticated, registered users have access 
+        # 'rest_framework.permissions.IsAdminUser',               # only admins/superusers have access 
         # 'rest_framework.permissions.IsAuthenticatedOrReadOnly', # unauthorized users can view any page, but only authenticated users have write, edit, or delete privileges
     ),
 }
