@@ -2,16 +2,15 @@
 from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework import permissions
-
+#from rest_framework import permissions
 from Blog.models import Category 
+from Blog.permissions import IsAuthorOrReadOnly
 from Blog.API.serializer.CategorySerializer import CategoryDetailSerializer
 from Blog.API.serializer.CategorySerializer import CategorySerializer
 
-
 class CategoryDetailView(APIView):
     # permission_classes = (permissions.IsAuthenticated, )
-
+    # permission_classes = (IsAuthorOrReadOnly,)
     def get(self, request, pk):
         category = Category.objects.get(id=pk)
         serializer = CategoryDetailSerializer(category)
@@ -34,7 +33,7 @@ class CategoryDetailView(APIView):
 
 class CategoryListView(APIView):
     # permission_classes = (permissions.IsAuthenticated, )
-
+    
     def get(self,request):
         category = Category.objects.all()
         # many - означает, что сериализатор будет сериализовывать более одной категории
