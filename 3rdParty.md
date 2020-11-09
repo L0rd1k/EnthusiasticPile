@@ -41,11 +41,11 @@ To create the signature part you have to take the **encoded header**, the **enco
 Works over HTTPS and authorize devices(API, servers, applications) with access tokens(not credentials).
 
 #### 5 grants types for aquiring an access token:  
-**1. Authorization code grant:** flow redirects you to Log-in directly with 3rd party(client never gets access to our      login/password). 3rd party(Google, FaceBook, Twitter ant etc.) provider generates JWT for fetching data. Avoid necessity to provide our own account data and password.
-**2. Implicit grant
-**3. Resource owner credentials grant
-**4. Client credentials grant
-**5. Refresh token grant
+1. Authorization code grant:** flow redirects you to Log-in directly with 3rd party(client never gets access to our      login/password). 3rd party(Google, FaceBook, Twitter ant etc.) provider generates JWT for fetching data. Avoid necessity to provide our own account data and password.
+2. Implicit grant
+3. Resource owner credentials grant
+4. Client credentials grant
+5. Refresh token grant
 
 #### OAuth2 uses HTTPS
 1. Client  -----> Authorization Request  -----> Authorization Server(Google Server)
